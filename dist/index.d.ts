@@ -1,5 +1,5 @@
 import { knex, Knex } from 'knex';
-import { Connection, pool } from 'node-jt400';
+import { Connection, pool } from '@nesgarbo/node-jt400';
 import SchemaCompiler from 'knex/lib/schema/compiler';
 import TableCompiler from 'knex/lib/schema/tablecompiler';
 import ColumnCompiler from 'knex/lib/schema/columncompiler';

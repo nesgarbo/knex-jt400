@@ -49,7 +49,7 @@ __export(index_exports, {
 module.exports = __toCommonJS(index_exports);
 var import_node_process = __toESM(require("process"));
 var import_knex = require("knex");
-var import_node_jt400 = require("node-jt400");
+var import_node_jt400 = require("@nesgarbo/node-jt400");
 
 // src/schema/ibmi-compiler.ts
 var import_compiler = __toESM(require("knex/lib/schema/compiler"));

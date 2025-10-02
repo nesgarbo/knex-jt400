@@ -1,6 +1,6 @@
 import TableCompiler from "knex/lib/schema/tablecompiler";
 import isObject from "lodash/isObject";
-import { Connection } from "node-jt400";
+import { Connection } from "@nesgarbo/node-jt400";
 
 class IBMiTableCompiler extends TableCompiler {
   createQuery(columns: { sql: any[] }, ifNot: any, like: any) {

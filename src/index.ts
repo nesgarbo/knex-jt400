@@ -1,6 +1,6 @@
 import process from "node:process";
 import { knex, Knex } from "knex";
-import { pool as jt400Pool, Connection } from "node-jt400";
+import { pool as jt400Pool, Connection } from "@nesgarbo/node-jt400";
 import SchemaCompiler from "./schema/ibmi-compiler";
 import TableCompiler from "./schema/ibmi-tablecompiler";
 import ColumnCompiler from "./schema/ibmi-columncompiler";
