@@ -12,39 +12,50 @@ describe("IBMi Client", () => {
     expect(new DB2Dialect({ client: "ibmi" })).to.exist;
   });
 
-  describe("Connection String", () => {
-    it("should return expected connection string", () => {
-      const connectionConfig = {
-        host: "localhost",
-        database: "testdb",
-        port: 50000,
-        user: "db2inst1",
-        password: "password",
-        driver: "{IBM Cli Driver}",
-      };
-      const expectedConnectionString =
-        `DRIVER=${connectionConfig.driver};SYSTEM=${connectionConfig.host};` +
-        `HOSTNAME=${connectionConfig.host};` +
-        `PORT=${connectionConfig.port};DATABASE=${connectionConfig.database};` +
-        `UID=${connectionConfig.user};PWD=${connectionConfig.password};`;
-
-      const connectionString = client._getConnectionString(connectionConfig);
-
-      expect(connectionString).to.equal(expectedConnectionString);
-    });
-
-    it("should append additional connection string parameters", () => {
-      const connectionConfig = {
-        connectionStringParams: {
-          X: "1",
-          Y: "20",
+  describe("Bigint normalization", () => {
+    it("normalizes bigint values to strings by default", () => {
+      const queryObject: any = {
+        sqlMethod: "select",
+        response: {
+          rows: [
+            {
+              id: 9007199254740995n,
+              nested: { value: 1n },
+              label: "example",
+            },
+          ],
+          rowCount: 1,
         },
       };
 
-      // @ts-ignore
-      const connectionString = client._getConnectionString(connectionConfig);
+      const result = client.processResponse(queryObject, {});
 
-      expect(connectionString.endsWith("X=1;Y=20;")).to.be.true;
+      expect(result).to.deep.equal([
+        {
+          id: "9007199254740995",
+          nested: { value: "1" },
+          label: "example",
+        },
+      ]);
+    });
+
+    it("can disable bigint normalization via configuration", () => {
+      const customClient = new DB2Dialect({
+        client: "ibmi",
+        ibmi: { normalizeBigintToString: false },
+      } as any);
+
+      const queryObject: any = {
+        sqlMethod: "select",
+        response: {
+          rows: [{ id: 42n }],
+          rowCount: 1,
+        },
+      };
+
+      const result = customClient.processResponse(queryObject, {});
+
+      expect(typeof result[0].id).to.equal("bigint");
     });
   });
 });

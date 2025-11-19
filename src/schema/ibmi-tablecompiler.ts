@@ -1,18 +1,26 @@
-import TableCompiler from "knex/lib/schema/tablecompiler";
-import isObject from "lodash/isObject";
+import TableCompiler from "knex/lib/schema/tablecompiler.js";
 import { Connection } from "@nesgarbo/node-jt400";
 
 class IBMiTableCompiler extends TableCompiler {
+  // Use type assertion to work around ESM import interface issues
+  [key: string]: any;
+
   createQuery(columns: { sql: any[] }, ifNot: any, like: any) {
-    let createStatement = ifNot
-      ? `if object_id('${this.tableName()}', 'U') is null `
-      : "";
+    // Note: IBM i DB2 does not support IF NOT EXISTS syntax directly
+    // The ifNot parameter should be handled by checking hasTable first
+    if (ifNot && this.client?.logger?.warn) {
+      this.client.logger.warn(
+        "IBM i DB2: IF NOT EXISTS is not natively supported. Use hasTable() check instead.",
+      );
+    }
+
+    let createStatement = "";
 
     if (like) {
-      // This query copy only columns and not all indexes and keys like other databases.
-      createStatement += `select * into ${this.tableName()} from ${this.tableNameLike()} WHERE 0=1`;
+      // IBM i DB2 syntax for creating table from existing structure
+      createStatement = `create table ${this.tableName()} as (select * from ${this.tableNameLike()}) with no data`;
     } else {
-      createStatement +=
+      createStatement =
         "create table " +
         this.tableName() +
         (this._formatting ? " (\n    " : " (") +
@@ -42,25 +50,30 @@ class IBMiTableCompiler extends TableCompiler {
 
   unique(
     columns: string[],
-    indexName: { indexName: any; deferrable: any; predicate: any },
+    indexName:
+      | string
+      | { indexName?: string; deferrable?: string; predicate?: any },
   ) {
     let deferrable: string = "";
     let predicate: any;
+    let finalIndexName: string | undefined;
 
-    if (isObject(indexName)) {
-      deferrable = indexName.deferrable;
+    if (typeof indexName === "object" && indexName !== null) {
+      deferrable = indexName.deferrable || "";
       predicate = indexName.predicate;
-      indexName = indexName.indexName;
+      finalIndexName = indexName.indexName;
+    } else {
+      finalIndexName = indexName;
     }
 
     if (deferrable && deferrable !== "not deferrable") {
       this.client.logger.warn?.(
-        `IBMi: unique index \`${indexName}\` will not be deferrable ${deferrable}.`,
+        `IBMi: unique index \`${finalIndexName}\` will not be deferrable ${deferrable}.`,
       );
     }
 
-    indexName = indexName
-      ? this.formatter.wrap(indexName)
+    const wrappedIndexName = finalIndexName
+      ? this.formatter.wrap(finalIndexName)
       : this._indexCommand("unique", this.tableNameRaw, columns);
     columns = this.formatter.columnize(columns);
 
@@ -69,7 +82,7 @@ class IBMiTableCompiler extends TableCompiler {
       : "";
 
     this.pushQuery(
-      `create unique index ${indexName} on ${this.tableName()} (${columns})${predicateQuery}`,
+      `create unique index ${wrappedIndexName} on ${this.tableName()} (${columns})${predicateQuery}`,
     );
   }
 
@@ -93,16 +106,7 @@ class IBMiTableCompiler extends TableCompiler {
   }
 
   async commit(connection: Connection) {
-    try {
-      if (typeof (connection).execute === "function") {
-        await (connection).execute("COMMIT", []);
-      } else if (typeof (connection).update === "function") {
-        await (connection).update("COMMIT", []);
-      }
-      // si la tx la maneja Knex/jt400.transaction(cb), esto no es necesario.
-    } catch {
-      // no-op: evitar romper si el entorno no usa compromiso explícito
-    }
+    return await connection.commit();
   }
 }
 

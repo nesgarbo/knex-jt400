@@ -170,10 +170,7 @@ const config: DB2Config = {
 const db = knex(config);
 
 try {
-  const data = await db
-    .select("*")
-    .from("table")
-    .stream({ fetchSize: 1 }); // optional, fetchSize defaults to 1
+  const data = await db.select("*").from("table").stream({ fetchSize: 1 }); // optional, fetchSize defaults to 1
 
   // use an objectMode transformer
   const transform = new Transform({
@@ -207,6 +204,7 @@ try {
 ```
 
 ## Bundling with Vite
+
 If you are bundling your application with Vite, then you will need to add this to your config.
 
 ```javascript
@@ -215,6 +213,6 @@ If you are bundling your application with Vite, then you will need to add this t
 export default {
   optimizeDeps: {
     exclude: ["@mapbox"],
-  }
-}
+  },
+};
 ```

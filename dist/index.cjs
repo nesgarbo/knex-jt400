@@ -1,5 +1,4 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
+"use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -1526,4 +1525,3 @@ var index_default = DB2Client;
   IBMiMigrationRunner,
   createIBMiMigrationRunner
 });
-//# sourceMappingURL=index.js.map
