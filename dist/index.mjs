@@ -7,7 +7,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
 // src/index.ts
 import process from "process";
 import { Buffer as Buffer2 } from "buffer";
-import { knex } from "knex";
+import knex from "knex";
 import { pool as jt400Pool } from "@nesgarbo/node-jt400";
 
 // src/schema/ibmi-compiler.ts

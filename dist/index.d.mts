@@ -1,4 +1,4 @@
-import { Knex, knex } from 'knex';
+import knex, { Knex } from 'knex';
 import { pool, Connection } from '@nesgarbo/node-jt400';
 
 interface IBMiMigrationConfig {

@@ -40,7 +40,7 @@ __export(index_exports, {
 module.exports = __toCommonJS(index_exports);
 var import_node_process = __toESM(require("process"));
 var import_node_buffer = require("buffer");
-var import_knex = require("knex");
+var import_knex = __toESM(require("knex"));
 var import_node_jt400 = require("@nesgarbo/node-jt400");
 
 // src/schema/ibmi-compiler.ts
@@ -831,7 +831,7 @@ var StatementCache = class {
     return this.cache.size;
   }
 };
-var DB2Client = class extends import_knex.knex.Client {
+var DB2Client = class extends import_knex.default.Client {
   constructor(config) {
     super(config);
     __publicField(this, "statementCaches", /* @__PURE__ */ new WeakMap());
