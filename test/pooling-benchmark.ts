@@ -4,7 +4,7 @@
  * Run with: ts-node test/pooling-benchmark.ts
  */
 
-import knex, { Knex } from "knex";
+import knex from "knex";
 import { DB2Dialect, DB2Config } from "../src/index";
 
 // Configuration - UPDATE WITH YOUR CREDENTIALS

@@ -1,4 +1,4 @@
-import { knex } from "knex";
+import knex from "knex";
 import { DB2Dialect } from "../../../src";
 import { testSql } from "../../utils/testSql";
 

@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { Knex } from "knex";
+import { type Knex } from "knex";
 
 export interface IBMiMigrationConfig {
   directory: string;

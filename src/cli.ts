@@ -29,7 +29,7 @@
  *   Use -x ts when creating migrations to generate TypeScript files.
  */
 
-import knex, { Knex } from "knex";
+import knex, { type Knex } from "knex";
 import { resolve, join } from "path";
 import { pathToFileURL } from "url";
 import { writeFileSync, mkdirSync, existsSync } from "fs";

@@ -2,7 +2,7 @@ declare module "knex/lib/formatter/wrappingFormatter";
 
 declare module "knex/lib/execution/transaction" {
   import { EventEmitter } from "node:events";
-  import { Knex } from "knex";
+  import { type Knex } from "knex";
 
   // eslint-disable-next-line
   interface Transaction extends Knex.Transaction {}
@@ -21,7 +21,7 @@ declare module "knex/lib/execution/transaction" {
 
 declare module "knex/lib/query/querycompiler" {
   // eslint-disable-next-line no-duplicate-imports
-  import { Knex } from "knex";
+  import type { Knex } from "knex";
 
   class QueryCompiler {
     client: Knex.Client;
@@ -88,7 +88,7 @@ declare module "knex/lib/query/querycompiler" {
 declare module "knex/lib/schema/tablecompiler" {
   // Eslint gets dumb about this
   // eslint-disable-next-line no-duplicate-imports
-  import { Knex } from "knex";
+  import type { Knex } from "knex";
 
   class TableCompiler {
     constructor(client: Knex.Client, tableBuilder?: Knex.TableBuilder);
@@ -165,7 +165,7 @@ declare module "knex/lib/schema/tablecompiler" {
 declare module "knex/lib/schema/columncompiler" {
   // Eslint gets dumb about this
   // eslint-disable-next-line no-duplicate-imports
-  import { Knex } from "knex";
+  import type { Knex } from "knex";
   import TableCompiler from "knex/lib/schema/tablecompiler";
 
   class ColumnCompiler {
@@ -233,7 +233,7 @@ declare module "knex/lib/schema/columncompiler" {
 declare module "knex/lib/schema/compiler" {
   // Eslint gets dumb about this
   // eslint-disable-next-line no-duplicate-imports
-  import { Knex } from "knex";
+  import type { Knex } from "knex";
 
   class SchemaCompiler {
     constructor(client: Knex.Client, builder?: Knex.TableBuilder);
